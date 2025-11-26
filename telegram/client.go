@@ -222,7 +222,7 @@ func (c *Client) init() {
 		c.cfg = manager.NewAtomicConfig(tg.Config{})
 	}
 	c.ready = tdsync.NewResetReady()
-	c.restart = make(chan struct{})
+	c.restart = make(chan struct{}, 1)
 	c.migration = make(chan struct{}, 1)
 	c.sessions = map[int]*pool.SyncSession{}
 	c.subConns = map[int]CloseInvoker{}
