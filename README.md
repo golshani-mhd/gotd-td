@@ -169,6 +169,37 @@ client.Run(ctx, func(ctx context.Context) error {
 })
 ```
 
+### Using TDLib JSON format
+
+You can invoke methods using pure TDLib JSON format with `InvokeRawJSON`.
+This accepts JSON with `@type` field in TDLib format (e.g., `"sendMessage"`)
+and returns JSON response in TDLib format, matching TDLib standard exactly.
+
+```go
+client := telegram.NewClient(appID, appHash, telegram.Options{})
+client.Run(ctx, func(ctx context.Context) error {
+  if _, err := client.Auth().Bot(ctx, "token:12345"); err != nil {
+    return err
+  }
+
+  // Send message using TDLib JSON format
+  jsonReq := `{
+    "@type": "sendMessage",
+    "chat_id": 123456789,
+    "message": "Hello from TDLib JSON!",
+    "random_id": 0
+  }`
+
+  jsonResp, err := client.InvokeRawJSON(ctx, jsonReq)
+  if err != nil {
+    return err
+  }
+  // jsonResp contains TDLib JSON response
+  // {"@type":"ok"} or {"@type":"error","code":420,"message":"FLOOD_WAIT_3"}
+  return nil
+})
+```
+
 ### Generated code
 
 The code output of `gotdgen` contains references to TL types, examples, URL to
